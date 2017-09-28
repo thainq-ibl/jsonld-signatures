@@ -254,6 +254,27 @@ describe('JSON-LD Signatures', function() {
             });
           });
 
+        it.only('verify local document using getPublicKey when key not found',
+          function(done) {
+            jsigs.sign(testDocument, {
+              algorithm: 'LinkedDataSignature2015',
+              privateKeyPem: testPrivateKeyPem3,
+              creator: testPublicKeyUrl3
+            }, function(err, signedDocument) {
+              assert.ifError(err);
+              jsigs.verify(signedDocument, {
+                getPublicKey: (keyId, options, callback) => {
+                  callback(new Error('Key not found.'));
+                },
+                getPublicKeyOwner: _publicKeyOwnerGetter
+              }, function(err, result) {
+                assert.ifError(err);
+                assert.isTrue(result.verified, 'signature verification failed');
+                done();
+              });
+            });
+          });
+
         it('should successfully sign a local document w/promises API',
           function(done) {
             jsigs.promises.sign(testDocument, {
