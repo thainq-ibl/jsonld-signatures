@@ -21,7 +21,8 @@ module.exports = function(grunt) {
   grunt.config('mochaTest', {
     test: {
       options: {
-        reporter: 'spec'
+        reporter: 'spec',
+        timeout: 16000
       },
       src: ['tests/test.js']
     }
